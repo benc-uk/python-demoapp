@@ -1,4 +1,5 @@
 FROM python:3
+LABEL Name="Python Flask Demo App" Version=1.0.0 
 
 WORKDIR /demoapp
 COPY requirements.txt .
