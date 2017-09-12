@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="jumbotron">
+      <table class="table table-striped table-hover" style="font-size:1.5em">
+         <tbody>
+            <tr>
+            <td>Hostname</td>
+            <td>{{ info.plat.node() }}</td>
+            </tr>
+            <tr>
+                  <td>OS Platform</td>
+                  <td>{{ info.plat.system() }}</td>
+            </tr>
+            <tr>
+                  <td>OS Version</td>
+                  <td>{{ info.plat.release() }}</td>
+            </tr>
+            <tr>
+                  <td>Python Version</td>
+                  <td>{{ info.plat.python_version() }}</td>
+            </tr>
+            <tr>
+                  <td>Hostname</td>
+                  <td>{{ info.cpu.count }} x {{ info.cpu.brand }}</td>
+            </tr>
+            <tr>
+               <td>Memory</td>
+               <td>Memory: {{ (info.mem.total / (1024*1024*1024)) | round(0,'ceil') |int }}GB ({{info.mem.percent}}% used)</td>
+            </tr>
+            <tr>
+               <td>Network</td>
+               <td>
+                  {% for iface, snics in info.net.items()  %}
+                     {% for snic in snics if (snic.family == 2) %}
+                        <li>{{ iface }} - {{ snic.address }} </li>
+                     {% endfor %} 
+                  {% endfor %}                        
+               </td>  
+            </tr>                                             
+         </tbody>
+      </table>
+
+</div>
+
+{% endblock %}
