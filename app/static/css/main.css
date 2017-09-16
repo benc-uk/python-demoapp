@@ -1,8 +1,18 @@
 body {
    padding-top: 70px;
-
 }
 h1 {
    padding-top: 0px !important;
    margin-top: -20px !important;
+}
+.navbar, .navbar-brand  {
+    font-size: 1.5em !important;
+}
+.btn {
+    font-size: 1.2em !important;
+}
+.gauges {
+    width: 100%; 
+    height: 30vw; 
+    margin: 0 auto;
 }
