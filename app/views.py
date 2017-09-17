@@ -38,14 +38,22 @@ def api_monitor():
    diskio = psutil.disk_io_counters()
    netio = psutil.net_io_counters()
 
-   apidata['net_sent'] = 0 if olddata['net_sent'] == 0 else netio.bytes_sent - olddata['net_sent']
-   olddata['net_sent'] = netio.bytes_sent
-   apidata['net_recv'] = 0 if olddata['net_recv'] == 0 else netio.bytes_recv - olddata['net_recv']
-   olddata['net_recv'] = netio.bytes_recv
-
-   apidata['disk_write'] = 0 if olddata['disk_write'] == 0 else diskio.write_bytes - olddata['disk_write']
-   olddata['disk_write'] = diskio.write_bytes
-   apidata['disk_read'] = 0 if olddata['disk_read'] == 0 else diskio.read_bytes - olddata['disk_read']
-   olddata['disk_read'] = diskio.read_bytes
+   try:
+      apidata['net_sent'] = 0 if olddata['net_sent'] == 0 else netio.bytes_sent - olddata['net_sent']
+      olddata['net_sent'] = netio.bytes_sent
+      apidata['net_recv'] = 0 if olddata['net_recv'] == 0 else netio.bytes_recv - olddata['net_recv']
+      olddata['net_recv'] = netio.bytes_recv
+   except:
+      apidata['net_sent'] = -1
+      apidata['net_recv'] = -1
+      
+   try:
+      apidata['disk_write'] = 0 if olddata['disk_write'] == 0 else diskio.write_bytes - olddata['disk_write']
+      olddata['disk_write'] = diskio.write_bytes
+      apidata['disk_read'] = 0 if olddata['disk_read'] == 0 else diskio.read_bytes - olddata['disk_read']
+      olddata['disk_read'] = diskio.read_bytes
+   except:
+      apidata['disk_write'] = -1
+      apidata['disk_read'] = -1
 
    return jsonify(apidata)
