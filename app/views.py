@@ -35,10 +35,9 @@ def api_monitor():
    apidata['cpu'] = psutil.cpu_percent(interval=0.9)
    apidata['mem'] = psutil.virtual_memory().percent
    apidata['disk'] = psutil.disk_usage('/').percent
-   diskio = psutil.disk_io_counters()
-   netio = psutil.net_io_counters()
-
+   
    try:
+      netio = psutil.net_io_counters()
       apidata['net_sent'] = 0 if olddata['net_sent'] == 0 else netio.bytes_sent - olddata['net_sent']
       olddata['net_sent'] = netio.bytes_sent
       apidata['net_recv'] = 0 if olddata['net_recv'] == 0 else netio.bytes_recv - olddata['net_recv']
@@ -48,6 +47,7 @@ def api_monitor():
       apidata['net_recv'] = -1
       
    try:
+      diskio = psutil.disk_io_counters()
       apidata['disk_write'] = 0 if olddata['disk_write'] == 0 else diskio.write_bytes - olddata['disk_write']
       olddata['disk_write'] = diskio.write_bytes
       apidata['disk_read'] = 0 if olddata['disk_read'] == 0 else diskio.read_bytes - olddata['disk_read']
