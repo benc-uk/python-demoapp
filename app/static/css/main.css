@@ -16,3 +16,17 @@ h1 {
     height: 30vw; 
     margin: 0 auto;
 }
+/* Sortable tables */
+table.sortable th {
+    background-color: #eeeeee;
+    color:#666666;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 10px;
+}
+td {
+    padding-right: 50px !important;
+    font-size: 18px;
+    border-bottom: 1px solid #dddddd;
+    cursor: default;
+}

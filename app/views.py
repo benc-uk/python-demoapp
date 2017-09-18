@@ -3,6 +3,7 @@ from app import app
 import cpuinfo
 import psutil
 import platform
+import datetime
 
 @app.route('/')
 def index():
@@ -15,14 +16,13 @@ def info():
    osinfo['cpu'] = cpuinfo.get_cpu_info()
    osinfo['mem'] = psutil.virtual_memory()
    osinfo['net'] = psutil.net_if_addrs()
+   osinfo['boottime'] = datetime.datetime.fromtimestamp(psutil.boot_time()).strftime("%Y-%m-%d %H:%M:%S")
 
    return render_template('info.html', info = osinfo)
 
 @app.route('/monitor')
 def monitor():
    return render_template('monitor.html')
-
-apidata = {}
 
 olddata = {}
 olddata['disk_write'] = 0
@@ -31,7 +31,7 @@ olddata['net_sent'] = 0
 olddata['net_recv'] = 0
 @app.route('/api/monitor')
 def api_monitor():
-   global net_sent_o 
+   apidata = {}
    apidata['cpu'] = psutil.cpu_percent(interval=0.9)
    apidata['mem'] = psutil.virtual_memory().percent
    apidata['disk'] = psutil.disk_usage('/').percent
@@ -55,5 +55,23 @@ def api_monitor():
    except:
       apidata['disk_write'] = -1
       apidata['disk_read'] = -1
+
+   return jsonify(apidata)
+
+@app.route('/api/process')
+def api_process():
+   apidata = {}
+   try:
+      apidata['processes'] = []
+      for proc in psutil.process_iter():
+         try:
+            #pinfo = proc.as_dict(attrs=['pid', 'name', 'num_handles', 'num_threads', 'memory_percent', 'cpu_times'])
+            pinfo = proc.as_dict(attrs=['pid', 'name', 'memory_percent', 'num_threads', 'cpu_times'])
+         except psutil.NoSuchProcess:
+            pass
+         else:
+            apidata['processes'].append(pinfo)
+   except:
+      pass
 
    return jsonify(apidata)
