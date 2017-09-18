@@ -68,9 +68,22 @@
                "name": "[variables('extensionName')]",
                "type": "siteextensions",
                "dependsOn": [
-                  "[resourceId('Microsoft.Web/Sites', parameters('webSiteName'))]"
+                  "[resourceId('Microsoft.Web/sites', parameters('webSiteName'))]"
                ]
-            }
+            },
+            {
+               "apiVersion": "2015-08-01",
+               "name": "web",
+               "type": "sourcecontrols",
+               "dependsOn": [
+                  "[resourceId('Microsoft.Web/sites/siteextensions', variables('extensionName'))]"
+               ],
+               "properties": {
+                  "RepoUrl": "[variables('sourceRepo')]",
+                  "branch": "[variables('sourceBranch')]",
+                  "IsManualIntegration": true
+               }
+            }            
          ]
       }
    ],
