@@ -12,7 +12,9 @@ The app can of course be run directly via Python. Python 3.x is required and has
 
 ## Running as Docker Container
 
-## Running in Azure App Service (Linux)
+## Running in Azure App Service (Windows)
+
+[![deploy](https://raw.githubusercontent.com/benc-uk/azure-arm/master/etc/azuredeploy.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fbenc-uk%2Fpyhton-demoapp%2Fmaster%2Fazure-deploy%2Fweb-app%2Fazuredeploy.json)  
 
 ## Running in Azure App Service (Linux)
 

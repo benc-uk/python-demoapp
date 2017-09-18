@@ -2,8 +2,6 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-      "webSiteName":      {"value": "bc6532745"},
-      "appSizingTier":    {"value": "B1"},
-      "appInstanceCount": {"value": 1}
+      "webSiteName": { "value": "python-demoapp-180917" }
     }
   }
