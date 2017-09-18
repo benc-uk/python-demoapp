@@ -1,5 +1,5 @@
 FROM python:3
-LABEL Name="Python Flask Demo App" Version=1.0.0 
+LABEL Name="Python Flask Demo App" Version=1.2.0 
 ARG port=5000
 ENV PORT=$port
 
