@@ -69,21 +69,7 @@
                "type": "siteextensions",
                "dependsOn": [
                   "[resourceId('Microsoft.Web/Sites', parameters('webSiteName'))]"
-               ],
-               "properties": {}
-            },
-            {
-               "apiVersion": "2015-08-01",
-               "name": "web",
-               "type": "sourcecontrols",
-               "dependsOn": [
-                  "[resourceId('Microsoft.Web/Sites', parameters('webSiteName'))]"
-               ],
-               "properties": {
-                  "RepoUrl": "[variables('sourceRepo')]",
-                  "branch": "[variables('sourceBranch')]",
-                  "IsManualIntegration": true
-               }
+               ]
             }
          ]
       }
