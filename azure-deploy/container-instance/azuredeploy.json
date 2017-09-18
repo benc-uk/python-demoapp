@@ -1,0 +1,80 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "containerName": {
+      "defaultValue": "python-flask-container",
+      "type": "string",
+      "metadata": {
+        "description": "Name of the container resource in Azure"
+      }
+    },
+    "previewLocation": {
+      "defaultValue": "westeurope",
+      "type": "string",
+      "allowedValues": [
+        "westeurope",
+        "westus",
+        "eastus"
+      ],
+      "metadata": {
+        "description": "During preview only available in these regions: westeurope, westus & eastus"
+      }
+    }
+  },
+  "variables": {
+    "containerPort": "5000",
+    "containerImage": "bencuk/python-demoapp",
+    "memory": 1.0,
+    "cpu": 1.0
+  },
+  "resources": [
+    {
+      "name": "[parameters('containerName')]",
+      "type": "Microsoft.ContainerInstance/containerGroups",
+      "apiVersion": "2017-08-01-preview",
+      "location": "[parameters('previewLocation')]",
+      "properties": {
+        "containers": [
+          {
+            "name": "[parameters('containerName')]",
+            "properties": {
+              "image": "[variables('containerImage')]",
+              "ports": [
+                {
+                  "port": "[variables('containerPort')]"
+                }
+              ],
+              "resources": {
+                "requests": {
+                  "cpu": "[variables('cpu')]",
+                  "memoryInGb": "[variables('memory')]"
+                }
+              }
+            }
+          }
+        ],
+        "osType": "Linux",
+        "ipAddress": {
+          "type": "Public",
+          "ports": [
+            {
+              "protocol": "tcp",
+              "port": "[variables('containerPort')]"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "newContainerURL": {
+      "value": "[concat('http://', reference(parameters('containerName')).ipAddress.ip, ':', reference(parameters('containerName')).ipAddress.ports[0].port)]",
+      "type": "string"
+    },
+    "newContainerState": {
+      "value": "[reference(parameters('containerName')).state]",
+      "type": "string"
+    }
+  }
+}
