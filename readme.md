@@ -18,8 +18,7 @@ The image is publicly available on [Dockerhub here](https://hub.docker.com/r/ben
 
 The container runs on Alpine Linux and is configured to use the latest version of Python (3.6.2 at the time of writing)
 
-If you want to deploy to an Azure Container Instance, a template is provided in the [azure-deploy directory](azure-deploy/container-instance), the following button deploys the template directly for you.  
-[![deploy](https://raw.githubusercontent.com/benc-uk/azure-arm/master/etc/azuredeploy.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fbenc-uk%2Fpython-demoapp%2Fmaster%2Fazure-deploy%2Fcontainer-instance%2Fazuredeploy.json)  
+If you want to deploy to an Azure Container Instance, a working template & quick deploy button is provided in the [azure deploy directory](azure-deploy/)
 
 ## Running in Azure App Service (Windows)
 When running in a Windows App Service (Web App), there's a few things to note:
@@ -31,10 +30,9 @@ When running in a Windows App Service (Web App), there's a few things to note:
   - Note, the `HTTP_PLATFORM_PORT` environmental variable is picked up directly by `run_waitress_server.py`, this variable is dynamically populated  by the HttpPlatformHandler, this is **not** the same port as when running via `run.py` (port 5000)  
   - More information on running Flask apps in Azure via WSGI can be found in [this blog post](https://prmadi.com/running-flask-app-with-httpplatformhandler-in-azure-app-services/), but some of the information is out of date
 
-If you want to deploy to an Azure Web App, a working template is provided in the [azure-deploy directory](azure-deploy/web-app), this carries out all the steps mentioned above. The following button deploys the template directly for you.  
-[![deploy](https://raw.githubusercontent.com/benc-uk/azure-arm/master/etc/azuredeploy.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fbenc-uk%2Fpython-demoapp%2Fmaster%2Fazure-deploy%2Fweb-app%2Fazuredeploy.json)  
+If you want to deploy to an Azure Web App, a working template & quick deploy button is provided in the [azure deploy directory](azure-deploy/)
+ 
 
 ## Running in Azure App Service (Linux)
 
-If you want to deploy to an Azure Container Instance, a template is provided in the [azure-deploy directory](azure-deploy/web-app-container), the following button deploys the template directly for you.  
-[![deploy](https://raw.githubusercontent.com/benc-uk/azure-arm/master/etc/azuredeploy.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fbenc-uk%2Fpython-demoapp%2Fmaster%2Fazure-deploy%2Fweb-app-container%2Fazuredeploy.json)  
+If you want to deploy to an Azure Web App for Containers (aka Linux Web App), a template is provided in the [azure deploy directory](azure-deploy/)
