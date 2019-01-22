@@ -1,0 +1,51 @@
+#
+# Azure Pipeline - Build defintion for demo web apps
+# Build as Docker container image and push to ACR, also push to public Dockerhub
+# Ben C, 2019
+#
+trigger: 
+  branches:
+    include: [ master ] 
+
+pool:
+  name: Hosted Ubuntu 1604
+
+#
+# NOTE! The shared-secrets variable group must be pre-created and populated
+# - Expected variables: acr-password, dockerhub-password
+#
+variables:
+  - group: shared-secrets
+
+  - name: app-name
+    value: python-demoapp
+  - name: acr-name
+    value: bcdemo
+  - name: dockerhub-name
+    value: bencuk
+  - name: docker-file
+    value: Dockerfile
+
+steps:
+#
+# Run Docker build
+#
+- bash: |
+    docker build . -f $(docker-file) -t $(dockerhub-name)/$(app-name):latest -t $(acr-name).azurecr.io/apps/$(app-name):latest -t $(acr-name).azurecr.io/apps/$(app-name):$(Build.BuildNumber)
+  displayName: 'Build app as container image'
+
+#
+# Push latest + tagged images to ACR
+#
+- bash: |
+    docker login $(acr-name).azurecr.io -u $(acr-name) -p $(acr-password)
+    docker push $(acr-name).azurecr.io/apps/$(app-name)
+  displayName: 'Push image to ACR'
+
+#
+# Push latest to Dockerhub
+#
+- bash: |
+    docker login -u $(dockerhub-name) -p $(dockerhub-password)
+    docker push $(dockerhub-name)/$(app-name):latest
+  displayName: 'Push image to Dockerhub'
