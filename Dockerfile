@@ -1,4 +1,4 @@
-FROM python:3.6-jessie
+FROM python:3.6-stretch
 LABEL Name="Python Flask Demo App" Version=1.3.0 
 
 WORKDIR /demoapp

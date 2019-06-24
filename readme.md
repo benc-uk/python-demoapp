@@ -16,7 +16,7 @@ Go to `http://localhost:5000` to view the app.
 ## Running as Docker Container
 The image is publicly available on [Dockerhub here](https://hub.docker.com/r/bencuk/python-demoapp/) so running it in Docker is simple `docker run -d -p 5000:5000 bencuk/python-demoapp`
 
-The container runs on Alpine Linux and is configured to use the latest version of Python (3.6.2 at the time of writing)
+The container runs on Debian Linux and is configured to use the latest version of Python (3.6.2 at the time of writing)
 
 If you want to deploy to an Azure Container Instance, a working template & quick deploy button is provided in the [azure deploy directory](azure-deploy/)
 
