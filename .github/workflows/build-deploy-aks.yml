@@ -93,3 +93,5 @@ jobs:
           image:
             tag: '${{ env.imageTag }}'
             repository: ${{ env.acrName }}.azurecr.io/apps/${{ env.imageName }}
+          ingress:
+            host: ${{ env.host }}

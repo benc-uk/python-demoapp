@@ -9,7 +9,6 @@ ingress:
   annotations:
     kubernetes.io/ingress.class: addon-http-application-routing
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
-  host: ${{ env.host }}
   tls: 
     enabled: true
     secretName: kube-benco-io-cert
