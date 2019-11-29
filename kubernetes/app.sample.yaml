@@ -8,8 +8,6 @@ image:
   tag: latest
   pullPolicy: Always
 
-replicaCount: 1
-
 service:
   targetPort: 5000
   type: LoadBalancer
