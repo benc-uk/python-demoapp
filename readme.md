@@ -4,7 +4,7 @@ This is a simple Python Flask web application designed for demos, to be used wit
 Deployment to Azure App Service is possible as Kudu deployment scripts and supporting files are provided to run as a HttpPlatformModule. Dockerfile is provided and public images are on Dockerhub to allow this to be run in a range of container services (Azure Web App for Containers, Azure Container Instance etc.)
 
 The app can of course be run directly via Python.  
-Python 3.5+ is required and has been tested on Windows with versions 3.5.2, 3.5.3 and 3.5.4. Under Linux 3.5.2 and 3.6.2 have been tested. Running under Linux subsystem for Windows (aka Bash for Windows) also works
+Python 3.5+ is required and has been tested on Windows and Linux (Ubuntu 18.04)
 
 ## Screenshot
 ![screen](https://user-images.githubusercontent.com/14982936/30533171-db17fccc-9c4f-11e7-8862-eb8c148fedea.png)
