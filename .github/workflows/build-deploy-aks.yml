@@ -1,0 +1,95 @@
+name: Build & Deploy AKS
+
+on: 
+  push: 
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+# Note. Required secrets: dockerPassword, acrPassword & kubeConfig
+
+env:
+  dockerUser: bencuk
+  acrName: bcdemo
+  imageName: python-demoapp
+  host: python-demoapp.kube.benco.io
+
+jobs:
+  buildJob:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+      
+    - name: Set imageTag variable
+      run: |
+        echo "echo \"::set-env name=imageTag::$(date +%Y%m%d.%H%M)\"" > vars.sh
+        source ./vars.sh
+      
+    - name: Build the Docker image
+      run: docker build . --file ./Dockerfile --tag $dockerUser/$imageName:latest --tag $acrName.azurecr.io/apps/$imageName:$imageTag --tag $acrName.azurecr.io/apps/$imageName:latest
+    
+    - name: Dockerhub Login
+      uses: Azure/docker-login@v1
+      with:
+        username: ${{ env.dockerUser }}
+        password: ${{ secrets.dockerPassword }} 
+
+    - name: Push to Dockerhub
+      run: docker push $dockerUser/$imageName
+      
+    - name: ACR Login
+      uses: Azure/docker-login@v1
+      with:
+        login-server: ${{ env.acrName }}.azurecr.io
+        username: ${{ env.acrName }}
+        password: ${{ secrets.acrPassword }}   
+            
+    - name: Push to ACR
+      run: docker push $acrName.azurecr.io/apps/$imageName
+
+    - name: Upload vars artifact
+      uses: actions/upload-artifact@v1
+      with:
+        name: vars
+        path: ./vars.sh
+
+# ================================================================
+
+  releaseJob:
+    needs: buildJob
+    env:
+      KUBECONFIG_FILE: '${{ secrets.kubeConfig }}'
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Download vars artifact
+      uses: actions/download-artifact@v1
+      with:
+        name: vars
+
+    - name: Set vars
+      run: source vars/vars.sh
+
+    - name: ACR Login
+      uses: Azure/docker-login@v1
+      with:
+        login-server: ${{ env.acrName }}.azurecr.io
+        username: ${{ env.acrName }}
+        password: ${{ secrets.acrPassword }}  
+
+    - name: Helm install Python-Demoapp
+      uses: deliverybot/helm@v1
+      with:
+        helm: helm3
+        release: python
+        namespace: demoapps
+        chart: https://code.benco.io/helm-charts/webapp-1.2.0.tgz
+        value-files: ./kubernetes/app.yaml
+        values: |
+          image:
+            tag: '${{ env.imageTag }}'
+            repository: ${{ env.acrName }}.azurecr.io/apps/${{ env.imageName }}

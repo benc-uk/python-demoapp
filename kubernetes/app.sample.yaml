@@ -1,0 +1,15 @@
+#
+# See this Helm chart for options
+# https://github.com/benc-uk/helm-charts/tree/master/webapp
+#
+
+image:
+  repository: bencuk/python-demoapp
+  tag: latest
+  pullPolicy: Always
+
+replicaCount: 1
+
+service:
+  targetPort: 5000
+  type: LoadBalancer
