@@ -1,11 +1,12 @@
 name: CI
 
-on: [push]
+on: 
+  - push
 
 jobs:
-  build:
+  test:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
 
     steps:
     - uses: actions/checkout@v1
