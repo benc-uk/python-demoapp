@@ -21,6 +21,16 @@ The container runs on Debian Linux and is configured to use the latest version o
 
 If you want to deploy to an Azure Container Instance, a working template & quick deploy button is provided in the [azure deploy directory](azure-deploy/)
 
+
+# GitHub Actions CI/CD 
+A working CI and release GitHub Actions workflow is provided `.github/workflows/build-deploy-aks.yml`, automated builds are run in GitHub hosted runners
+
+### [GitHub Actions](https://github.com/benc-uk/python-demoapp/actions)
+
+![](https://img.shields.io/github/workflow/status/benc-uk/python-demoapp/Build%20%26%20Deploy%20AKS)  
+![](https://img.shields.io/github/last-commit/benc-uk/python-demoapp)  
+
+
 ## Running in Azure App Service (Linux)
 
 If you want to deploy to an Azure Web App for Containers (aka Linux Web App), a template is provided in the [azure deploy directory](azure-deploy/)
