@@ -1,3 +1,0 @@
-[submodule "azure-arm"]
-	path = azure-arm
-	url = https://github.com/benc-uk/azure-arm.git
