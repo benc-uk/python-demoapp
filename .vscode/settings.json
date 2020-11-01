@@ -1,4 +1,5 @@
 {
     "python.linting.pylintEnabled": false,
-    "python.pythonPath": ".venv/bin/python"
+    "python.pythonPath": ".venv/bin/python",
+    "editor.semanticHighlighting.enabled": true
 }

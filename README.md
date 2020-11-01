@@ -15,25 +15,27 @@ Simply run with `python run.py` the script should start the app, and set Flask l
 Go to `http://localhost:5000` to view the app.  
 
 ## Running as Docker Container
-The image is publicly available on [Dockerhub here](https://hub.docker.com/r/bencuk/python-demoapp/) so running it in Docker is simple `docker run -d -p 5000:5000 bencuk/python-demoapp`
+The image is publicly available on [GitHub Container Registry](https://hub.docker.com/r/bencuk/python-demoapp/) so running it in Docker is simple `docker run --rm -it -p 5000:5000 ghcr.io/benc-uk/python-demoapp`
 
 The container runs on Debian Linux and is configured to use the latest version of Python (3.6.2 at the time of writing)
 
-If you want to deploy to an Azure Container Instance, a working template & quick deploy button is provided in the [azure deploy directory](azure-deploy/)
-
 
 # GitHub Actions CI/CD 
-A working CI and release GitHub Actions workflow is provided `.github/workflows/build-deploy-aks.yml`, automated builds are run in GitHub hosted runners
+A working set of CI and CD release GitHub Actions workflows are provided `.github/workflows/`, automated builds are run in GitHub hosted runners
 
 ### [GitHub Actions](https://github.com/benc-uk/python-demoapp/actions)
 
-![](https://img.shields.io/github/workflow/status/benc-uk/python-demoapp/Build%20%26%20Deploy%20AKS)  
-![](https://img.shields.io/github/last-commit/benc-uk/python-demoapp)  
+![](https://img.shields.io/github/workflow/status/benc-uk/python-demoapp/CI%20Build%20App)
 
+![](https://img.shields.io/github/workflow/status/benc-uk/python-demoapp/CD%20Release%20-%20AKS?label=release-kubernetes)  
+
+![](https://img.shields.io/github/workflow/status/benc-uk/python-demoapp/CD%20Release%20-%20Webapp?label=release-azure)
+
+![](https://img.shields.io/github/last-commit/benc-uk/python-demoapp)  
 
 ## Running in Azure App Service (Linux)
 
-If you want to deploy to an Azure Web App for Containers (aka Linux Web App), a template is provided in the [azure deploy directory](azure-deploy/)
+If you want to deploy to an Azure Web App as a container (aka Linux Web App), a Bicep template is provided in the [infrastructure as code](infra/) directory
 
 ## Running in Azure App Service (Windows)
 Just don't
