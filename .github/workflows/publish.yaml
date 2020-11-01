@@ -1,0 +1,31 @@
+name: Release Versioned Image
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+env:
+  IMAGE_REG: ghcr.io
+  IMAGE_REPO: benc-uk/python-demoapp
+
+jobs:
+  publish-image:
+    name: "Build & Publish"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+
+      - name: "Docker build image with version tag"
+        run: docker build . -t $IMAGE_REG/$IMAGE_REPO:latest -t $IMAGE_REG/$IMAGE_REPO:${{ github.event.release.tag_name }}
+
+      - name: "Login to GitHub container registry"
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.IMAGE_REG }}
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.CR_PAT }}
+
+      - name: "Docker push image to ${{ env.IMAGE_REG }}"
+        run: docker push $IMAGE_REG/$IMAGE_REPO
