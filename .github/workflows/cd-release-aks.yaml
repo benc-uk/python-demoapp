@@ -86,10 +86,10 @@ jobs:
       - name: "Validate site is running"
         run: .github/scripts/url-check.sh -u https://${{ env.INGRESS_DNS_HOST }} -s "Python Flask" -t 200
 
-      - name: "Run API tests"
-        run: |
-          npm install newman --silent
-          node_modules/newman/bin/newman.js run src/tests/postman_collection.json --global-var apphost=${{ env.INGRESS_DNS_HOST }}
+      # - name: "Run API tests"
+      #   run: |
+      #     npm install newman --silent
+      #     node_modules/newman/bin/newman.js run src/tests/postman_collection.json --global-var apphost=${{ env.INGRESS_DNS_HOST }}
 
       - name: "End deployment - success"
         if: ${{ success() }}

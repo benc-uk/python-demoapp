@@ -91,10 +91,10 @@ jobs:
       - name: "Validate site is running"
         run: .github/scripts/url-check.sh -u https://${{ env.APP_NAME }}.azurewebsites.net/ -s "Python Flask" -t 200
 
-      - name: "Run API tests"
-        run: |
-          npm install newman --silent
-          node_modules/newman/bin/newman.js run src/tests/postman_collection.json --global-var apphost=${{ env.APP_NAME }}.azurewebsites.net
+      # - name: "Run API tests"
+      #   run: |
+      #     npm install newman --silent
+      #     node_modules/newman/bin/newman.js run src/tests/postman_collection.json --global-var apphost=${{ env.APP_NAME }}.azurewebsites.net
 
       - name: "End deployment - success"
         if: ${{ success() }}
