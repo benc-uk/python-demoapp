@@ -25,17 +25,19 @@ A working set of CI and CD release GitHub Actions workflows are provided `.githu
 
 ### [GitHub Actions](https://github.com/benc-uk/python-demoapp/actions)
 
-![](https://img.shields.io/github/workflow/status/benc-uk/python-demoapp/CI%20Build%20App)
+[![](https://img.shields.io/github/workflow/status/benc-uk/python-demoapp/CI%20Build%20App)](https://github.com/benc-uk/python-demoapp/actions?query=workflow%3A%22CI+Build+App%22)
 
-![](https://img.shields.io/github/workflow/status/benc-uk/python-demoapp/CD%20Release%20-%20AKS?label=release-kubernetes)  
+[![](https://img.shields.io/github/workflow/status/benc-uk/python-demoapp/CD%20Release%20-%20AKS?label=release-kubernetes)](https://github.com/benc-uk/python-demoapp/actions?query=workflow%3A%22CD+Release+-+AKS%22)
 
-![](https://img.shields.io/github/workflow/status/benc-uk/python-demoapp/CD%20Release%20-%20Webapp?label=release-azure)
+[![](https://img.shields.io/github/workflow/status/benc-uk/python-demoapp/CD%20Release%20-%20Webapp?label=release-azure)](https://github.com/benc-uk/python-demoapp/actions?query=workflow%3A%22CD+Release+-+Webapp%22)
 
-![](https://img.shields.io/github/last-commit/benc-uk/python-demoapp)  
+[![](https://img.shields.io/github/last-commit/benc-uk/python-demoapp)](https://github.com/benc-uk/python-demoapp/commits/master)
+
 
 ## Running in Azure App Service (Linux)
 
 If you want to deploy to an Azure Web App as a container (aka Linux Web App), a Bicep template is provided in the [infrastructure as code](infra/) directory
 
+
 ## Running in Azure App Service (Windows)
-Just don't
+Just don't, it's awful
