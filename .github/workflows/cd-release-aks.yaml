@@ -61,7 +61,7 @@ jobs:
           https://code.benco.io/helm-charts/webapp-1.2.0.tgz \
           --install \
           --namespace ${{ env.HELM_NAMESPACE }} \
-          --values ./kubernetes/app.yaml \
+          --values ./kubernetes/aks-live.yaml \
           --set image.tag=${{ github.event.inputs.IMAGE_TAG }},image.repository=${{ env.IMAGE_REG }}/${{ env.IMAGE_REPO }},env.AAD_REDIRECT_URL_BASE=https://${{ env.INGRESS_DNS_HOST }},ingress.host=${{ env.INGRESS_DNS_HOST }}
 
       - name: "End deployment - failure"
