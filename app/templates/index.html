@@ -1,16 +1,41 @@
 {% extends "base.html" %}
 
 {% block content %}
-
+<br>
 <div class="jumbotron">
-	<h1><img src="/static/img/flask.png" height="80px"/> Python Flask Demo App</h1>
-	<p>
-		<br/>
-		This is a simple Python Flask demo web app, to be used with Azure, Docker and other demos &amp; lab exercises. <br/>
-		The <a href='https://github.com/benc-uk/python-demoapp'>source is on GitHub</a>, and pre-built Docker images are available <a href='https://hub.docker.com/r/bencuk/python-demoapp'></a>on Dockerhub</a>
-	</p>
-	<p>
-		<a class="btn btn-success" href="/monitor">Realtime Monitor</a>
-	</p>
+	<h1><img src="/static/img/flask.png" height="80px" /> Python & Flask Demo App</h1>
+
+	<div class="lead">
+		This is a simple web application written in Python and using Flask. It has been designed with cloud demos &amp;
+		containers in mind. Demonstrating capabilities such as auto scaling, deployment to Azure or Kubernetes, or anytime
+		you want something quick and lightweight to run & deploy.
+	</div>
+	<br>
+
+	<div class="dimmed-box">
+		<p>
+			<img src="static/img/github-2.svg" class="icon">
+			<a href="https://github.com/benc-uk/python-demoapp" class="btn btn-info btn px-4">
+				GitHub Project
+			</a>
+
+			&nbsp;&nbsp;&nbsp;
+			<img src="static/img/docker-whale.svg" class="icon">
+			<a href="https://github.com/users/benc-uk/packages/container/package/python-demoapp" class="btn btn-info btn">
+				Docker Images
+			</a>
+		</p>
+		<hr>
+		<p>
+			<img src="static/img/python.svg" class="icon">
+			<a class="btn btn-info btn" href="https://azure.microsoft.com/en-gb/develop/python/">
+				Get started with Azure &amp; Python
+			</a>
+		</p>
+
+		<br>
+		<p>Microsoft ❤ Open Source</p>
+	</div>
+
 </div>
 {% endblock %}
