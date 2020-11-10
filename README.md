@@ -38,6 +38,10 @@ A working set of CI and CD release GitHub Actions workflows are provided `.githu
 
 If you want to deploy to an Azure Web App as a container (aka Linux Web App), a Bicep template is provided in the [infrastructure as code](infra/) directory
 
+You can also very quickly deploy to Azure App Service directly with the [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/) and `az webapp up`. Note. `<app-name>` must be globally unique. Change the sku to a larger size, e.g. `P1V2` for a much faster deployment
+```
+az webapp up --sku F1 --name <app-name>
+```
 
 ## Running in Azure App Service (Windows)
 Just don't, it's awful

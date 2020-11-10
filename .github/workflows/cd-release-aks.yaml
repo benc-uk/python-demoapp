@@ -16,8 +16,6 @@ on:
 # Note. Required secrets: CR_PAT & AZURE_CREDENTIALS
 
 env:
-  IMAGE_REG: ghcr.io
-  IMAGE_REPO: benc-uk/python-demoapp
   AKS_NAME: benc
   AKS_RES_GROUP: aks
   HELM_RELEASE: python
@@ -57,12 +55,12 @@ jobs:
 
       - name: "Helm release"
         run: |
-          helm upgrade ${{ env.HELM_RELEASE }} \
-          https://code.benco.io/helm-charts/webapp-1.2.0.tgz \
-          --install \
-          --namespace ${{ env.HELM_NAMESPACE }} \
-          --values ./kubernetes/app.yaml \
-          --set image.tag=${{ github.event.inputs.IMAGE_TAG }},image.repository=${{ env.IMAGE_REG }}/${{ env.IMAGE_REPO }},env.AAD_REDIRECT_URL_BASE=https://${{ env.INGRESS_DNS_HOST }},ingress.host=${{ env.INGRESS_DNS_HOST }}
+          helm repo add benc-uk https://benc-uk.github.io/helm-charts
+           helm upgrade ${{ env.HELM_RELEASE }} benc-uk/webapp \
+           --install \
+           --namespace ${{ env.HELM_NAMESPACE }} \
+           --values ./kubernetes/app.yaml \
+           --set image.tag=${{ github.event.inputs.IMAGE_TAG }},ingress.host=${{ env.INGRESS_DNS_HOST }}
 
       - name: "End deployment - failure"
         if: ${{ failure() }}

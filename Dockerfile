@@ -1,5 +1,5 @@
 FROM python:3.8-buster
-LABEL Name="Python Flask Demo App" Version=1.3.0 
+LABEL Name="Python Flask Demo App" Version=1.4.0 
 
 WORKDIR /demoapp
 COPY requirements.txt .
