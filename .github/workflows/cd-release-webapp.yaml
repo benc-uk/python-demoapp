@@ -30,7 +30,7 @@ jobs:
   #
   deploy-infra:
     environment:
-      name: App Service - vuego-demoapp
+      name: App Service - python-demoapp
       url: https://${{ env.APP_NAME }}.azurewebsites.net/
     name: "Deploy Infra"
     runs-on: ubuntu-latest
@@ -60,7 +60,7 @@ jobs:
     name: "Run Deployment Tests"
     needs: deploy-infra
     environment:
-      name: App Service - vuego-demoapp
+      name: App Service - python-demoapp
       url: https://${{ env.APP_NAME }}.azurewebsites.net/
 
     runs-on: ubuntu-latest

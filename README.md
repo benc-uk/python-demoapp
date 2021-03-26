@@ -22,7 +22,7 @@ Typical uses would be deployment to Kubernetes, demos of Docker, CI/CD (build pi
 Clone the project to any directory where you do development work
 
 ```
-git clone https://github.com/benc-uk/vuego-demoapp.git
+git clone https://github.com/benc-uk/python-demoapp.git
 ```
 
 ### Makefile
@@ -59,7 +59,7 @@ The app runs under Flask and listens on port 5000 by default, this can be change
 
 # Containers
 
-Public container image is [available on GitHub Container Registry](https://github.com/users/benc-uk/packages/container/package/vuego-demoapp)
+Public container image is [available on GitHub Container Registry](https://github.com/users/benc-uk/packages/container/package/python-demoapp)
 
 Run in a container with:
 

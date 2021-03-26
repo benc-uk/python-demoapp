@@ -30,7 +30,7 @@ jobs:
     name: Deploy to AKS with Helm
     runs-on: ubuntu-latest
     environment:
-      name: AKS - vuego-demoapp
+      name: AKS - python-demoapp
       url: https://${{ env.INGRESS_DNS_HOST }}/
 
     steps:
@@ -63,7 +63,7 @@ jobs:
     needs: deploy-aks
     runs-on: ubuntu-latest
     environment:
-      name: AKS - vuego-demoapp
+      name: AKS - python-demoapp
       url: https://${{ env.INGRESS_DNS_HOST }}/
 
     steps:
