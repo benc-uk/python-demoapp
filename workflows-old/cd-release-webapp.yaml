@@ -1,0 +1,114 @@
+#
+# Deploy to Azure App Service as a containerized Web App
+# Using Bicep for infrastructure as code
+#
+
+name: CD Release - Webapp
+
+on:
+  workflow_dispatch:
+    inputs:
+      IMAGE_TAG:
+        description: "Image tag to be deployed"
+        required: true
+        default: "latest"
+
+# Note. Required secrets: CR_PAT & AZURE_CREDENTIALS
+
+env:
+  IMAGE_REG: ghcr.io
+  IMAGE_REPO: benc-uk/python-demoapp
+  APP_NAME: python-demoapp
+  ARM_SUB_ID: 52512f28-c6ed-403e-9569-82a9fb9fec91
+  ARM_REGION: westeurope
+  ARM_RES_GROUP: apps
+
+jobs:
+  #
+  # Deploy Azure infra (App Service) using Bicep
+  #
+  deploy-infra:
+    name: "Deploy Infra"
+    runs-on: ubuntu-latest
+    outputs:
+      deployment_id: ${{ steps.deploy.outputs.deployment_id }}
+
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+
+      - name: "Start deployment"
+        id: deploy
+        uses: chrnorm/deployment-action@v1.2.0
+        with:
+          ref: ${{ github.event.ref }}
+          token: ${{ github.token }}
+          environment: App Service - ${{ env.APP_NAME }}
+
+      - name: "Run Bicep compiler"
+        run: |
+          wget https://github.com/Azure/bicep/releases/download/v0.1.37-alpha/bicep-linux-x64 -qO bicep
+          chmod +x bicep
+          ./bicep build webapp.bicep
+        working-directory: ./infra
+
+      - name: "Login to Azure"
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: "Create resource group"
+        run: az group create --name ${{ env.ARM_RES_GROUP }} --location ${{ env.ARM_REGION }}
+
+      - name: "Deploy resources"
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ env.ARM_SUB_ID }}
+          resourceGroupName: ${{ env.ARM_RES_GROUP }}
+          template: ./infra/webapp.json
+          parameters: webappName=${{ env.APP_NAME }} webappImage=${{ env.IMAGE_REG }}/${{ env.IMAGE_REPO }}:${{ github.event.inputs.IMAGE_TAG }} weatherKey=${{ secrets.WEATHER_API_KEY }}
+          deploymentName: webapp-deploy-${{ github.run_id }}
+
+      - name: "End deployment - failure"
+        if: ${{ failure() }}
+        uses: chrnorm/deployment-status@v1.0.0
+        with:
+          token: ${{ github.token }}
+          state: failure
+          deployment_id: ${{ needs.deploy-bicep.outputs.deployment_id }}
+
+  #
+  # Post deployment testing stage
+  #
+  validate-deployment:
+    name: "Run Deployment Tests"
+    needs: deploy-infra
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+
+      - name: "Validate site is running"
+        run: .github/scripts/url-check.sh -u https://${{ env.APP_NAME }}.azurewebsites.net/ -s "Python" -t 200
+
+      # - name: "Run API tests"
+      #   run: |
+      #     npm install newman --silent
+      #     node_modules/newman/bin/newman.js run src/tests/postman_collection.json --global-var apphost=${{ env.APP_NAME }}.azurewebsites.net
+
+      - name: "End deployment - success"
+        if: ${{ success() }}
+        uses: chrnorm/deployment-status@v1.0.0
+        with:
+          token: ${{ github.token }}
+          state: success
+          deployment_id: ${{ needs.deploy-infra.outputs.deployment_id }}
+          environment_url: https://${{ env.APP_NAME }}.azurewebsites.net/
+
+      - name: "End deployment - failure"
+        if: ${{ failure() }}
+        uses: chrnorm/deployment-status@v1.0.0
+        with:
+          token: ${{ github.token }}
+          state: failure
+          deployment_id: ${{ needs.deploy-infra.outputs.deployment_id }}

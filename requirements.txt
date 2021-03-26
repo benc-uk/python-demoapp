@@ -1,4 +1,0 @@
-Flask
-py-cpuinfo
-psutil
-gunicorn

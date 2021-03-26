@@ -22,60 +22,36 @@ env:
   ARM_SUB_ID: 52512f28-c6ed-403e-9569-82a9fb9fec91
   ARM_REGION: westeurope
   ARM_RES_GROUP: apps
+  DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: 1 # Fixes weird Azure CLI + Bicep + GHA bug
 
 jobs:
   #
   # Deploy Azure infra (App Service) using Bicep
   #
   deploy-infra:
+    environment:
+      name: App Service - vuego-demoapp
+      url: https://${{ env.APP_NAME }}.azurewebsites.net/
     name: "Deploy Infra"
     runs-on: ubuntu-latest
-    outputs:
-      deployment_id: ${{ steps.deploy.outputs.deployment_id }}
 
     steps:
       - name: "Checkout"
         uses: actions/checkout@v2
 
-      - name: "Start deployment"
-        id: deploy
-        uses: chrnorm/deployment-action@v1.2.0
-        with:
-          ref: ${{ github.event.ref }}
-          token: ${{ github.token }}
-          environment: App Service - ${{ env.APP_NAME }}
-
-      - name: "Run Bicep compiler"
-        run: |
-          wget https://github.com/Azure/bicep/releases/download/v0.1.37-alpha/bicep-linux-x64 -qO bicep
-          chmod +x bicep
-          ./bicep build webapp.bicep
-        working-directory: ./infra
-
       - name: "Login to Azure"
-        uses: azure/login@v1
+        uses: azure/login@v1.3.0
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: "Create resource group"
-        run: az group create --name ${{ env.ARM_RES_GROUP }} --location ${{ env.ARM_REGION }}
+        run: az group create --name $ARM_RES_GROUP --location $ARM_REGION
 
       - name: "Deploy resources"
-        uses: azure/arm-deploy@v1
-        with:
-          subscriptionId: ${{ env.ARM_SUB_ID }}
-          resourceGroupName: ${{ env.ARM_RES_GROUP }}
-          template: ./infra/webapp.json
-          parameters: webappName=${{ env.APP_NAME }} webappImage=${{ env.IMAGE_REG }}/${{ env.IMAGE_REPO }}:${{ github.event.inputs.IMAGE_TAG }} weatherKey=${{ secrets.WEATHER_API_KEY }}
-          deploymentName: webapp-deploy-${{ github.run_id }}
-
-      - name: "End deployment - failure"
-        if: ${{ failure() }}
-        uses: chrnorm/deployment-status@v1.0.0
-        with:
-          token: ${{ github.token }}
-          state: failure
-          deployment_id: ${{ needs.deploy-bicep.outputs.deployment_id }}
+        run: |
+          az deployment group create --template-file deploy/webapp.bicep -g $ARM_RES_GROUP -p webappName=$APP_NAME \
+          webappImage=$IMAGE_REG/$IMAGE_REPO:${{ github.event.inputs.IMAGE_TAG }} \
+          releaseInfo="Ref=${{ github.ref }} RunId=${{ github.run_id }}"
 
   #
   # Post deployment testing stage
@@ -83,32 +59,19 @@ jobs:
   validate-deployment:
     name: "Run Deployment Tests"
     needs: deploy-infra
+    environment:
+      name: App Service - vuego-demoapp
+      url: https://${{ env.APP_NAME }}.azurewebsites.net/
+
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout"
         uses: actions/checkout@v2
 
       - name: "Validate site is running"
-        run: .github/scripts/url-check.sh -u https://${{ env.APP_NAME }}.azurewebsites.net/ -s "Python" -t 200
+        run: .github/scripts/url-check.sh -u https://${APP_NAME}.azurewebsites.net/ -s "Flask" -t 200
 
-      # - name: "Run API tests"
-      #   run: |
-      #     npm install newman --silent
-      #     node_modules/newman/bin/newman.js run src/tests/postman_collection.json --global-var apphost=${{ env.APP_NAME }}.azurewebsites.net
-
-      - name: "End deployment - success"
-        if: ${{ success() }}
-        uses: chrnorm/deployment-status@v1.0.0
-        with:
-          token: ${{ github.token }}
-          state: success
-          deployment_id: ${{ needs.deploy-infra.outputs.deployment_id }}
-          environment_url: https://${{ env.APP_NAME }}.azurewebsites.net/
-
-      - name: "End deployment - failure"
-        if: ${{ failure() }}
-        uses: chrnorm/deployment-status@v1.0.0
-        with:
-          token: ${{ github.token }}
-          state: failure
-          deployment_id: ${{ needs.deploy-infra.outputs.deployment_id }}
+      - name: "Run API tests"
+        run: |
+          npm install newman --silent
+          node_modules/newman/bin/newman.js run tests/postman_collection.json --global-var apphost=${APP_NAME}.azurewebsites.net
