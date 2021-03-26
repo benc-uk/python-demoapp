@@ -8,7 +8,9 @@ olddata["disk_read"] = 0
 olddata["net_sent"] = 0
 olddata["net_recv"] = 0
 
-
+#
+# This route returns real time process information as a REST API
+#
 @app.route("/api/process")
 def api_process():
     apidata = {}
@@ -29,7 +31,9 @@ def api_process():
 
     return jsonify(apidata)
 
-
+#
+# This route returns real time system metrics as a REST API
+#
 @app.route("/api/monitor")
 def api_monitor():
     apidata = {}
