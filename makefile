@@ -49,8 +49,8 @@ deploy:  ## 🚀 Deploy to Azure Web App
 	@echo "### 🚀 Web app deployed to https://$(AZURE_SITE_NAME).azurewebsites.net/"
 
 undeploy:  ## 💀 Remove from Azure 
-	@echo "### WARNING! Going to delete $(DEPLOY_RES_GROUP) 😲"
-	az group delete -n $(DEPLOY_RES_GROUP) -o table --no-wait
+	@echo "### WARNING! Going to delete $(AZURE_RES_GROUP) 😲"
+	az group delete -n $(AZURE_RES_GROUP) -o table --no-wait
 
 test: ## 🎯 Unit tests for server and frontend 
 	cd $(SRC_DIR); go test -v | tee server_tests.txt
