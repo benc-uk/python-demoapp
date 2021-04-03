@@ -1,6 +1,3 @@
-import pprint
-
-
 def test_home(client):
     resp = client.get("/")
 
