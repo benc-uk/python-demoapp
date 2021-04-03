@@ -1,5 +1,9 @@
 {
-    "python.linting.pylintEnabled": false,
-    "python.pythonPath": ".venv/bin/python",
-    "editor.semanticHighlighting.enabled": true
+  "python.pythonPath": "src/.venv/bin/python",
+  "editor.semanticHighlighting.enabled": true,
+  "editor.formatOnSave": true,
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.python"
+  },
+  "python.formatting.provider": "black"
 }

@@ -1,24 +1,16 @@
 {% extends "base.html" %} {% block content %}
 
 <script src="/static/js/sorttable.js"></script>
-<script
-  type="text/javascript"
-  src="https://www.gstatic.com/charts/loader.js"
-></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script src="/static/js/monitor.js"></script>
 <script type="text/javascript">
-  google.charts.load("current", { packages: ["gauge"] });
-  google.charts.setOnLoadCallback(initCharts);
+  google.charts.load('current', { packages: ['gauge'] })
+  google.charts.setOnLoadCallback(initCharts)
 </script>
 
 <body>
   <span style="float: right">
-    Refresh Rate: <span id="refrate"></span> secs<input
-      id="refslider"
-      type="range"
-      min="2"
-      max="15"
-    />
+    Refresh Rate: <span id="refrate"></span> secs<input id="refslider" type="range" min="2" max="15" />
   </span>
   <br />
   <h2>👓 Running Processes (<span id="proc_count"></span>)</h2>

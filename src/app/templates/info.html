@@ -30,16 +30,12 @@
       </tr>
       <tr>
         <td><b>System Memory</b></td>
-        <td>
-          {{ (info.mem.total / (1024*1024*1024)) | round(0,'ceil') |int }}GB
-          ({{info.mem.percent}}% used)
-        </td>
+        <td>{{ (info.mem.total / (1024*1024*1024)) | round(0,'ceil') |int }}GB ({{info.mem.percent}}% used)</td>
       </tr>
       <tr>
         <td><b>Network Interfaces</b></td>
         <td>
-          {% for iface, snics in info.net.items() %} {% for snic in snics if
-          (snic.family == 2) %}
+          {% for iface, snics in info.net.items() %} {% for snic in snics if (snic.family == 2) %}
           <li>{{ iface }} - <b>{{ snic.address }}</b></li>
           {% endfor %} {% endfor %}
         </td>
