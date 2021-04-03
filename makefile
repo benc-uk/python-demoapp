@@ -52,10 +52,13 @@ undeploy:  ## 💀 Remove from Azure
 	@echo "### WARNING! Going to delete $(AZURE_RES_GROUP) 😲"
 	az group delete -n $(AZURE_RES_GROUP) -o table --no-wait
 
-test: ## 🎯 Unit tests for server and frontend 
-	@echo "Not implemented!"
+test: venv  ## 🎯 Unit tests for Flask app
+	. $(SRC_DIR)/.venv/bin/activate \
+	&& pytest -v
 
-test-report: test  ## 🎯 Unit tests for server and frontend (with report output)
+test-report: venv  ## 🎯 Unit tests for Flask app (with report output)
+	. $(SRC_DIR)/.venv/bin/activate \
+	&& pytest -v --junitxml=test-results.xml
 
 test-api: .EXPORT_ALL_VARIABLES  ## 🚦 Run integration API tests, server must be running 
 	cd tests \
@@ -66,6 +69,11 @@ clean:  ## 🧹 Clean up project
 	rm -rf $(SRC_DIR)/.venv
 	rm -rf tests/node_modules
 	rm -rf tests/package*
+	rm -rf test-results.xml
+	rm -rf $(SRC_DIR)/app/__pycache__
+	rm -rf $(SRC_DIR)/app/tests/__pycache__
+	rm -rf .pytest_cache
+	rm -rf $(SRC_DIR)/.pytest_cache
 
 # ============================================================================
 

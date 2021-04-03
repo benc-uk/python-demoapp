@@ -1,5 +1,4 @@
-from flask import jsonify
-from app import app
+from flask import jsonify, current_app as app
 import psutil
 
 olddata = {}

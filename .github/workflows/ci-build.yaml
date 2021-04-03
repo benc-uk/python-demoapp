@@ -4,7 +4,7 @@ on:
   push:
     branches: [master]
     paths:
-      - "src/**"
+      - 'src/**'
   pull_request:
 
 env:
@@ -13,31 +13,45 @@ env:
 
 jobs:
   test:
-    name: "Tests & Linting"
+    name: 'Tests & Linting'
     runs-on: ubuntu-latest
     steps:
-      - name: "Checkout"
+      - name: 'Checkout'
         uses: actions/checkout@v2
 
-      - name: "Run linting"
+      - name: 'Run linting'
         run: make lint
 
-      - name: "Run tests"
+      - name: 'Run tests'
         run: make test-report
 
+      - name: 'Upload test results'
+        uses: actions/upload-artifact@v2
+        # Disabled when running locally with the nektos/act tool
+        if: ${{ always() && !env.ACT }}
+        with:
+          name: test-results
+          path: ./test-results.xml
+
+      - name: Publish Unit Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        if: ${{ always() && !env.ACT }}
+        with:
+          files: test-results.xml
+
   build:
-    name: "Build & Push Image"
+    name: 'Build & Push Image'
     needs: test
     runs-on: ubuntu-latest
     steps:
-      - name: "Checkout"
+      - name: 'Checkout'
         uses: actions/checkout@v2
 
       # Nicer than using github runid, I think, will be picked up automatically by make
-      - name: "Create datestamp image tag"
+      - name: 'Create datestamp image tag'
         run: echo "IMAGE_TAG=$(date +%d-%m-%Y.%H%M)" >> $GITHUB_ENV
 
-      - name: "Docker build image"
+      - name: 'Docker build image'
         run: make image
 
       # Only when pushing to default branch (e.g. master or main), then push image to registry
@@ -47,18 +61,18 @@ jobs:
           echo ${{ secrets.GITHUB_TOKEN }} | docker login $IMAGE_REG -u $GITHUB_ACTOR --password-stdin
           make push
 
-      - name: "Trigger AKS release pipeline"
+      - name: 'Trigger AKS release pipeline'
         if: github.ref == 'refs/heads/master'
         uses: benc-uk/workflow-dispatch@v1
         with:
-          workflow: "CD Release - AKS"
+          workflow: 'CD Release - AKS'
           token: ${{ secrets.GH_PAT }}
           inputs: '{ "IMAGE_TAG": "${{ env.IMAGE_TAG }}" }'
 
-      - name: "Trigger Azure web app release pipeline"
+      - name: 'Trigger Azure web app release pipeline'
         if: github.ref == 'refs/heads/master'
         uses: benc-uk/workflow-dispatch@v1
         with:
-          workflow: "CD Release - Webapp"
+          workflow: 'CD Release - Webapp'
           token: ${{ secrets.GH_PAT }}
           inputs: '{ "IMAGE_TAG": "${{ env.IMAGE_TAG }}" }'

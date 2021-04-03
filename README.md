@@ -47,8 +47,8 @@ push                 📤 Push container image to registry
 run                  🏃 Run the server locally using Python & Flask
 deploy               🚀 Deploy to Azure Web App
 undeploy             💀 Remove from Azure
-test                 🎯 Unit tests for server and frontend
-test-report          🎯 Unit tests for server and frontend (with report output)
+test                 🎯 Unit tests for Flask app
+test-report          🎯 Unit tests for Flask app (with report output)
 test-api             🚦 Run integration API tests, server must be running
 clean                🧹 Clean up project
 ```

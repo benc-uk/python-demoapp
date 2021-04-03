@@ -101,3 +101,7 @@ venv.bak/
 .mypy_cache/
 .secrets
 .env
+test-*.xml
+tests/node_modules
+tests/package*.json
+.pytest_cache
