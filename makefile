@@ -53,8 +53,7 @@ undeploy:  ## 💀 Remove from Azure
 	az group delete -n $(AZURE_RES_GROUP) -o table --no-wait
 
 test: ## 🎯 Unit tests for server and frontend 
-	cd $(SRC_DIR); go test -v | tee server_tests.txt
-	cd $(SPA_DIR); npm run test
+	@echo "Not implemented!"
 
 test-report: test  ## 🎯 Unit tests for server and frontend (with report output)
 

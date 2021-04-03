@@ -17,6 +17,7 @@ The `.secrets` file must be created first, see the sample file for a reference.
 
 ```bash
 act push --secret-file .github/.secrets --platform ubuntu-latest=ghcr.io/benc-uk/act-runner:python
+act push --secret-file .github/.secrets --platform ubuntu-latest=ghcr.io/benc-uk/devcontainers/python
 ```
 
 ### Run a deployment

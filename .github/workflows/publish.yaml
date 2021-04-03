@@ -23,6 +23,6 @@ jobs:
 
       - name: "Push to container registry"
         run: |
-          echo ${{ secrets.CR_PAT }} | docker login $IMAGE_REG -u $GITHUB_ACTOR --password-stdin
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login $IMAGE_REG -u $GITHUB_ACTOR --password-stdin
           make push IMAGE_TAG=${{ github.event.release.tag_name }}
           make push IMAGE_TAG=latest
