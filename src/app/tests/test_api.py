@@ -1,6 +1,7 @@
 import json
 
 
+# Test the process API returns JSON results we expect
 def test_api_process(client):
     resp = client.get("/api/process")
 
@@ -12,6 +13,7 @@ def test_api_process(client):
     assert len(resp_payload["processes"][0]["name"]) > 0
 
 
+# Test the monitor API returns JSON results we expect
 def test_api_monitor(client):
     resp = client.get("/api/monitor")
 
