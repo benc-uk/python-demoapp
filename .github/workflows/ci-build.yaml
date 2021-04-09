@@ -33,7 +33,7 @@ jobs:
           name: test-results
           path: ./test-results.xml
 
-      - name: Publish Unit Test Results
+      - name: 'Publish test results'
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: ${{ always() && !env.ACT }}
         with:
@@ -49,13 +49,13 @@ jobs:
 
       # Nicer than using github runid, I think, will be picked up automatically by make
       - name: 'Create datestamp image tag'
-        run: echo "IMAGE_TAG=$(date +%d-%m-%Y.%H%M)" >> $GITHUB_ENV
+        run: sudo echo "IMAGE_TAG=$(date +%d-%m-%Y.%H%M)" >> $GITHUB_ENV
 
       - name: 'Docker build image'
         run: make image
 
       # Only when pushing to default branch (e.g. master or main), then push image to registry
-      - name: Push to container registry
+      - name: 'Push to container registry'
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
         run: |
           echo ${{ secrets.GITHUB_TOKEN }} | docker login $IMAGE_REG -u $GITHUB_ACTOR --password-stdin

@@ -9,11 +9,11 @@ on:
   workflow_dispatch:
     inputs:
       IMAGE_TAG:
-        description: "Image tag to be deployed"
+        description: 'Image tag to be deployed'
         required: true
-        default: "latest"
+        default: 'latest'
 
-# Note. Required secrets: CR_PAT & AZURE_CREDENTIALS
+# Note. Required secrets: AZURE_CREDENTIALS
 
 env:
   IMAGE_REG: ghcr.io
@@ -32,22 +32,22 @@ jobs:
     environment:
       name: App Service - python-demoapp
       url: https://${{ env.APP_NAME }}.azurewebsites.net/
-    name: "Deploy Infra"
+    name: 'Deploy Infra'
     runs-on: ubuntu-latest
 
     steps:
-      - name: "Checkout"
+      - name: 'Checkout'
         uses: actions/checkout@v2
 
-      - name: "Login to Azure"
+      - name: 'Login to Azure'
         uses: azure/login@v1.3.0
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: "Create resource group"
+      - name: 'Create resource group'
         run: az group create --name $ARM_RES_GROUP --location $ARM_REGION
 
-      - name: "Deploy resources"
+      - name: 'Deploy resources'
         run: |
           az deployment group create --template-file deploy/webapp.bicep -g $ARM_RES_GROUP -p webappName=$APP_NAME \
           webappImage=$IMAGE_REG/$IMAGE_REPO:${{ github.event.inputs.IMAGE_TAG }} \
@@ -57,7 +57,7 @@ jobs:
   # Post deployment testing stage
   #
   validate-deployment:
-    name: "Run Deployment Tests"
+    name: 'Run Deployment Tests'
     needs: deploy-infra
     environment:
       name: App Service - python-demoapp
@@ -65,13 +65,13 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-      - name: "Checkout"
+      - name: 'Checkout'
         uses: actions/checkout@v2
 
-      - name: "Validate site is running"
+      - name: 'Validate site is running'
         run: .github/scripts/url-check.sh -u https://${APP_NAME}.azurewebsites.net/ -s "Flask" -t 200
 
-      - name: "Run API tests"
+      - name: 'Run API tests'
         run: |
           npm install newman --silent
           node_modules/newman/bin/newman.js run tests/postman_collection.json --global-var apphost=${APP_NAME}.azurewebsites.net
