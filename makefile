@@ -1,18 +1,14 @@
 # Used by `image`, `push` & `deploy` targets, override as required
-IMAGE_REG ?= ghcr.io
-IMAGE_REPO ?= benc-uk/python-demoapp
+IMAGE_REPO ?= m219raptis/python-demoapp
 IMAGE_TAG ?= latest
 
-# Used by `deploy` target, sets Azure webap defaults, override as required
-AZURE_RES_GROUP ?= temp-demoapps
-AZURE_REGION ?= uksouth
-AZURE_SITE_NAME ?= pythonapp-$(shell git rev-parse --short HEAD)
-
 # Used by `test-api` target
-TEST_HOST ?= localhost:5000
+TEST_HOST ?= localhost:5008
 
 # Don't change
 SRC_DIR := src
+
+# venv: src/venv/touchfile
 
 .PHONY: help lint lint-fix image push run deploy undeploy clean test-api .EXPORT_ALL_VARIABLES
 .DEFAULT_GOAL := help
@@ -23,7 +19,7 @@ help:  ## 💬 This help message
 lint: venv  ## 🔎 Lint & format, will not fix but sets exit code on error 
 	. $(SRC_DIR)/.venv/bin/activate \
 	&& black --check $(SRC_DIR) \
-	&& flake8 src/app/ && flake8 src/run.py
+	&& flake8 $(SRC_DIR)/app/ && flake8 $(SRC_DIR)/run.py
 
 lint-fix: venv  ## 📜 Lint & format, will try to fix errors and modify code
 	. $(SRC_DIR)/.venv/bin/activate \
@@ -31,26 +27,14 @@ lint-fix: venv  ## 📜 Lint & format, will try to fix errors and modify code
 
 image:  ## 🔨 Build container image from Dockerfile 
 	docker build . --file build/Dockerfile \
-	--tag $(IMAGE_REG)/$(IMAGE_REPO):$(IMAGE_TAG)
+	--tag $(IMAGE_REPO):$(IMAGE_TAG)
 
 push:  ## 📤 Push container image to registry 
-	docker push $(IMAGE_REG)/$(IMAGE_REPO):$(IMAGE_TAG)
+	docker push $(IMAGE_REPO):$(IMAGE_TAG)
 
 run: venv  ## 🏃 Run the server locally using Python & Flask
 	. $(SRC_DIR)/.venv/bin/activate \
-	&& python src/run.py
-
-deploy:  ## 🚀 Deploy to Azure Web App 
-	az group create --resource-group $(AZURE_RES_GROUP) --location $(AZURE_REGION) -o table
-	az deployment group create --template-file deploy/webapp.bicep \
-		--resource-group $(AZURE_RES_GROUP) \
-		--parameters webappName=$(AZURE_SITE_NAME) \
-		--parameters webappImage=$(IMAGE_REG)/$(IMAGE_REPO):$(IMAGE_TAG) -o table 
-	@echo "### 🚀 Web app deployed to https://$(AZURE_SITE_NAME).azurewebsites.net/"
-
-undeploy:  ## 💀 Remove from Azure 
-	@echo "### WARNING! Going to delete $(AZURE_RES_GROUP) 😲"
-	az group delete -n $(AZURE_RES_GROUP) -o table --no-wait
+	&& python3 $(SRC_DIR)/run.py
 
 test: venv  ## 🎯 Unit tests for Flask app
 	. $(SRC_DIR)/.venv/bin/activate \

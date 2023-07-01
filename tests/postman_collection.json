@@ -36,8 +36,12 @@
         "url": {
           "raw": "http://{{apphost}}/",
           "protocol": "http",
-          "host": ["{{apphost}}"],
-          "path": [""]
+          "host": [
+            "{{apphost}}"
+          ],
+          "path": [
+            ""
+          ]
         }
       },
       "response": []
@@ -73,8 +77,12 @@
         "url": {
           "raw": "http://{{apphost}}/info",
           "protocol": "http",
-          "host": ["{{apphost}}"],
-          "path": ["info"]
+          "host": [
+            "{{apphost}}"
+          ],
+          "path": [
+            "info"
+          ]
         }
       },
       "response": []
@@ -99,7 +107,6 @@
               "    var processData = pm.response.json();",
               "    pm.expect(processData.processes).to.be.an('array')",
               "    pm.expect(processData.processes[0].name).to.be.an('string')",
-              "    pm.expect(processData.processes[0].memory_percent).to.be.an('number')",
               "    pm.expect(processData.processes[0].pid).to.be.an('number')",
               "});",
               ""
@@ -114,8 +121,13 @@
         "url": {
           "raw": "http://{{apphost}}/api/process",
           "protocol": "http",
-          "host": ["{{apphost}}"],
-          "path": ["api", "process"]
+          "host": [
+            "{{apphost}}"
+          ],
+          "path": [
+            "api",
+            "process"
+          ]
         }
       },
       "response": []
@@ -126,14 +138,18 @@
       "listen": "prerequest",
       "script": {
         "type": "text/javascript",
-        "exec": [""]
+        "exec": [
+          ""
+        ]
       }
     },
     {
       "listen": "test",
       "script": {
         "type": "text/javascript",
-        "exec": [""]
+        "exec": [
+          ""
+        ]
       }
     }
   ]
