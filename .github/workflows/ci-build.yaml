@@ -96,5 +96,6 @@ jobs:
       - run: |
           ssh -i ${{ steps.ssh_preparations.outputs.ssh_key_file }} ${{env.USER}}@${{env.HOST}}
           docker login -u ${{ secrets.D_REG_USER }} -p ${{ secrets.D_REG_PW }}
+          docker image pull ${{ env.IMAGE_REPO }}:${{ needs.build.outputs.image_tag }}
           docker ps -aq | xargs -r docker stop | xargs -r docker rm &&
           docker container run -dp 5008:5008 -t ${{ env.IMAGE_REPO }}:${{ needs.build.outputs.image_tag }}
