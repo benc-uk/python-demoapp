@@ -71,8 +71,7 @@ jobs:
 
       # Only when pushing to default branch (e.g. master or main), then push image to registry
       - name: 'Push to container registry'
-        # if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
         run: |
           docker login -u ${{ secrets.D_REG_USER }} -p ${{ secrets.D_REG_PW }}
           make push
