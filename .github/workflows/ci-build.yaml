@@ -107,6 +107,7 @@ jobs:
         with:
           host: ${{ env.HOST }}
           username: ${{env.USER}}
+          key: ${{ secrets.D_SSH_KEY }}
           script: |
             docker login -u ${{ secrets.D_REG_USER }} -p ${{ secrets.D_REG_PW }}
             docker image pull ${{ env.IMAGE_REPO }}:${{ needs.build.outputs.image_tag }}
