@@ -101,5 +101,16 @@ jobs:
           docker ps -aq | xargs -r docker stop | xargs -r docker rm
           docker container run -dp 5008:5008 -t ${{ env.IMAGE_REPO }}:${{ needs.build.outputs.image_tag }}
           docker ps
-          sleep 1m
-          docker ps
+          whoami
+      - name: alternate
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ env.HOST }}
+          username: ${{env.USER}}
+          script: |
+            docker login -u ${{ secrets.D_REG_USER }} -p ${{ secrets.D_REG_PW }}
+            docker image pull ${{ env.IMAGE_REPO }}:${{ needs.build.outputs.image_tag }}
+            docker ps -aq | xargs -r docker stop | xargs -r docker rm
+            docker container run -dp 5008:5008 -t ${{ env.IMAGE_REPO }}:${{ needs.build.outputs.image_tag }}
+            docker ps
+            whoami
