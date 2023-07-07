@@ -52,7 +52,7 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     outputs:
-      image_tag: ${{ steps.set_image_tag.outputs.test }}
+      image_tag: ${{ steps.set_image_tag.outputs.image_tag }}
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v3
