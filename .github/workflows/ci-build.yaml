@@ -101,3 +101,5 @@ jobs:
           docker ps -aq | xargs -r docker stop | xargs -r docker rm
           docker container run -dp 5008:5008 -t ${{ env.IMAGE_REPO }}:${{ needs.build.outputs.image_tag }}
           docker ps
+          sleep 1m
+          docker ps
