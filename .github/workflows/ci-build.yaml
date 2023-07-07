@@ -15,6 +15,9 @@ jobs:
   test:
     name: 'Tests & Linting'
     runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      pull-requests: write
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v3
@@ -39,7 +42,7 @@ jobs:
           path: ./test-results.xml
 
       - name: 'Publish test results'
-        uses: EnricoMi/publish-unit-test-result-action@v1
+        uses: EnricoMi/publish-unit-test-result-action@v2
         if: ${{ always() && !env.ACT }}
         with:
           files: test-results.xml
