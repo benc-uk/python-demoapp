@@ -85,33 +85,13 @@ jobs:
       HOST: '64.227.114.131'
       USER: root
     steps:
-      - name: Create key file
-        id: ssh_preparations
-        run: |
-          ls -la /home/runner/
-          mkdir -p /home/runner/.ssh
-          ssh-keyscan ${{env.HOST}} >> /home/runner/.ssh/known_hosts
-          echo "${{ secrets.D_SSH_KEY }}" > /home/runner/.ssh/digital_ocean_key
-          chmod 600 /home/runner/.ssh/digital_ocean_key
-          echo "ssh_key_file=/home/runner/.ssh/digital_ocean_key" >> "$GITHUB_OUTPUT"
-      - run: |
-          ssh -i ${{ steps.ssh_preparations.outputs.ssh_key_file }} ${{env.USER}}@${{env.HOST}}
-          docker login -u ${{ secrets.D_REG_USER }} -p ${{ secrets.D_REG_PW }}
-          docker image pull ${{ env.IMAGE_REPO }}:${{ needs.build.outputs.image_tag }}
-          docker ps -aq | xargs -r docker stop | xargs -r docker rm
-          docker container run -dp 5008:5008 -t ${{ env.IMAGE_REPO }}:${{ needs.build.outputs.image_tag }}
-          docker ps
-          whoami
-      - name: alternate
-        uses: appleboy/ssh-action@v0.1.10
+      - uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ env.HOST }}
-          username: ${{env.USER}}
+          username: ${{ env.USER }}
           key: ${{ secrets.D_SSH_KEY }}
           script: |
             docker login -u ${{ secrets.D_REG_USER }} -p ${{ secrets.D_REG_PW }}
             docker image pull ${{ env.IMAGE_REPO }}:${{ needs.build.outputs.image_tag }}
             docker ps -aq | xargs -r docker stop | xargs -r docker rm
             docker container run -dp 5008:5008 -t ${{ env.IMAGE_REPO }}:${{ needs.build.outputs.image_tag }}
-            docker ps
-            whoami
