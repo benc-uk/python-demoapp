@@ -1,6 +1,7 @@
 name: CI Build App
 
 on:
+  workflow_dispatch:
   push:
     branches: [master]
     paths:
@@ -17,6 +18,11 @@ jobs:
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v3
+
+      - run: |
+          apt-get update
+          apt-get install python3.10-venv --assume-yes
+          apt-get install python-dev-is-python3 --assume-yes
 
       - name: 'Run linting'
         run: make lint
@@ -42,13 +48,19 @@ jobs:
     name: 'Build & Push Image'
     needs: test
     runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.set_image_tag.outputs.test }}
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v3
 
       # Nicer than using github runid, I think, will be picked up automatically by make
       - name: 'Create datestamp image tag'
-        run: sudo echo "IMAGE_TAG=$(date +%d-%m-%Y.%H%M)" >> $GITHUB_ENV
+        id: set_image_tag
+        run: |
+          sudo echo "IMAGE_TAG=$(date +%d-%m-%Y.%H%M)" >> $GITHUB_ENV
+          echo "image_tag=${{ env.IMAGE_TAG }}" >> "$GITHUB_OUTPUT"
+
 
       - name: 'Docker build image'
         run: make image
@@ -57,21 +69,28 @@ jobs:
       - name: 'Push to container registry'
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
         run: |
-          docker login -u $D_REG_USER -p $D_REG_PW
+          docker login -u ${{ secrets.D_REG_USER }} -p ${{ secrets.D_REG_PW }}
           make push
-
-      # - name: 'Trigger AKS release pipeline'
-      #   if: github.ref == 'refs/heads/master'
-      #   uses: benc-uk/workflow-dispatch@v1
-      #   with:
-      #     workflow: 'CD Release - AKS'
-      #     token: ${{ secrets.GH_PAT }}
-      #     inputs: '{ "IMAGE_TAG": "${{ env.IMAGE_TAG }}" }'
-
-      # - name: 'Trigger Azure web app release pipeline'
-      #   if: github.ref == 'refs/heads/master'
-      #   uses: benc-uk/workflow-dispatch@v1
-      #   with:
-      #     workflow: 'CD Release - Webapp'
-      #     token: ${{ secrets.GH_PAT }}
-      #     inputs: '{ "IMAGE_TAG": "${{ env.IMAGE_TAG }}" }'
+  
+  deploy:
+    name: 'Deploy to Digital Ocean'
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      HOST: '64.227.114.131'
+      USER: root
+    steps:
+      - name: Create key file
+        id: ssh_preparations
+        run: |
+          ls -la /home/runner/
+          mkdir -p /home/runner/.ssh
+          ssh-keyscan ${{env.HOST}} >> /home/runner/.ssh/known_hosts
+          echo "${{ secrets.D_SSH_KEY }}" > /home/runner/.ssh/digital_ocean_key
+          chmod 600 /home/runner/.ssh/digital_ocean_key
+          echo "ssh_key_file=/home/runner/.ssh/digital_ocean_key" >> "$GITHUB_OUTPUT"
+      - run: |
+          ssh -i ${{ steps.ssh_preparations.outputs.ssh_key_file }} ${{env.USER}}@${{env.HOST}}
+          docker login -u ${{ secrets.D_REG_USER }} -p ${{ secrets.D_REG_PW }}
+          docker ps -aq | xargs -r docker stop | xargs -r docker rm &&
+          docker container run -dp 5008:5008 -t ${{ env.IMAGE_REPO }}:${{ needs.build.outputs.image_tag }}

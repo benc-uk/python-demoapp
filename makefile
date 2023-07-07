@@ -34,7 +34,7 @@ push:  ## 📤 Push container image to registry
 
 run: venv  ## 🏃 Run the server locally using Python & Flask
 	. $(SRC_DIR)/.venv/bin/activate \
-	&& python3 $(SRC_DIR)/run.py
+	&& python $(SRC_DIR)/run.py
 
 test: venv  ## 🎯 Unit tests for Flask app
 	. $(SRC_DIR)/.venv/bin/activate \
@@ -64,6 +64,6 @@ clean:  ## 🧹 Clean up project
 venv: $(SRC_DIR)/.venv/touchfile
 
 $(SRC_DIR)/.venv/touchfile: $(SRC_DIR)/requirements.txt
-	python3 -m venv $(SRC_DIR)/.venv
+	python -m venv $(SRC_DIR)/.venv
 	. $(SRC_DIR)/.venv/bin/activate; pip install -Ur $(SRC_DIR)/requirements.txt
 	touch $(SRC_DIR)/.venv/touchfile
