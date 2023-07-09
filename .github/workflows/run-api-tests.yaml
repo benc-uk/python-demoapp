@@ -1,4 +1,4 @@
-name: CI Build App
+name: API tests
 
 on:
   workflow_dispatch:

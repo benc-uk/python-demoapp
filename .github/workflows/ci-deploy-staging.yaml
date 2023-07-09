@@ -20,6 +20,9 @@ jobs:
       PORT: 5080
       USER: root
     steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v3
+        
       - name: build
         run: make image IMAGE_TAG=${{ env.IMAGE_TAG }}
 
