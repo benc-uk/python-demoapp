@@ -7,9 +7,6 @@ on:
     paths:
       - 'src/**'
 
-env:
-  IMAGE_REPO: m219raptis/python-demoapp
-
 jobs:
   test:
     name: 'Tests & Linting'
@@ -81,6 +78,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     env:
+      IMAGE_REPO: m219raptis/python-demoapp
       HOST: '64.227.114.131'
       PORT: 5008
       USER: root
