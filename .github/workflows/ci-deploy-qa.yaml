@@ -79,7 +79,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       IMAGE_REPO: m219raptis/python-demoapp
-      PORT: 5008
       USER: root
     steps:
       - uses: appleboy/ssh-action@v0.1.10
@@ -90,6 +89,6 @@ jobs:
           script: |
             docker login -u ${{ secrets.D_REG_USER }} -p ${{ secrets.D_REG_PW }}
             docker image pull ${{ env.IMAGE_REPO }}:${{ needs.build.outputs.image_tag }}
-            docker ps | awk '/:${{ env.PORT }}/ {print $1}' | xargs -r docker stop | xargs -r docker rm
-            docker container run -dp ${{ env.PORT }}:5008 -t ${{ env.IMAGE_REPO }}:${{ needs.build.outputs.image_tag }}
+            docker ps | awk '/:${{ vars.QA_PORT }}/ {print $1}' | xargs -r docker stop | xargs -r docker rm
+            docker container run -dp ${{ vars.QA_PORT }}:5008 -t ${{ env.IMAGE_REPO }}:${{ needs.build.outputs.image_tag }}
             

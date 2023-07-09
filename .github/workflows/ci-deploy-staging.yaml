@@ -14,7 +14,6 @@ jobs:
     env:
       IMAGE_REPO: m219raptis/python-demoapp
       IMAGE_TAG: latest
-      PORT: 5080
       USER: root
     steps:
       - name: 'Checkout'
@@ -38,8 +37,8 @@ jobs:
           script: |
             docker login -u ${{ secrets.D_REG_USER }} -p ${{ secrets.D_REG_PW }}
             docker image pull ${{ env.IMAGE_REPO }}:${{ env.IMAGE_TAG }}
-            docker ps | awk '/:${{ env.PORT }}/ {print $1}' | xargs -r docker stop | xargs -r docker rm
-            docker container run -dp ${{ env.PORT }}:5008 -t ${{ env.IMAGE_REPO }}:${{ env.IMAGE_TAG }}
+            docker ps | awk '/:${{ vars.STAGING_PORT }}/ {print $1}' | xargs -r docker stop | xargs -r docker rm
+            docker container run -dp ${{ vars.STAGING_PORT }}:5008 -t ${{ env.IMAGE_REPO }}:${{ env.IMAGE_TAG }}
 
   trigger-tests:
     name: 'Trigger tests'

@@ -8,12 +8,10 @@ jobs:
   api-tests:
     name: 'API tests'
     runs-on: ubuntu-latest
-    env:
-      PORT: 5080
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v3
 
       - name: Run API tests
-        run: make test-api TEST_HOST=${{ vars.STAGING_HOST }}:${{ env.PORT }}
+        run: make test-api TEST_HOST=${{ vars.STAGING_HOST }}:${{ vars.STAGING_PORT }}
 
