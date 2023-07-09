@@ -1,0 +1,50 @@
+name: CI Deploy Staging
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - 'src/**'
+
+env:
+  IMAGE_REPO: m219raptis/python-demoapp
+  IMAGE_TAG: latest
+
+jobs:
+  deploy:
+    name: 'Deploy to Staging'
+    runs-on: ubuntu-latest
+    env:
+      HOST: '64.227.114.131'
+      PORT: 5080
+      USER: root
+    steps:
+      - name: build
+        run: make image IMAGE_TAG=${{ env.IMAGE_TAG }}
+
+      - name: 'Push to container registry'
+      # if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        if: github.ref == 'refs/heads/master'
+        run: |
+          docker login -u ${{ secrets.D_REG_USER }} -p ${{ secrets.D_REG_PW }}
+          make push
+
+      - uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ env.HOST }}
+          username: ${{ env.USER }}
+          key: ${{ secrets.D_SSH_KEY }}
+          script: |
+            docker login -u ${{ secrets.D_REG_USER }} -p ${{ secrets.D_REG_PW }}
+            docker image pull ${{ env.IMAGE_REPO }}:${{ env.IMAGE_TAG }}
+            docker ps | awk '/:${{ env.PORT }}/ {print $1}' | xargs -r docker stop | xargs -r docker rm
+            docker container run -dp ${{ env.PORT }}:5008 -t ${{ env.IMAGE_REPO }}:${{ env.IMAGE_TAG }}
+
+  trigger-tests:
+    name: 'Trigger tests'
+    runs-on: ubuntu-latest
+    steps:
+      - name: trigger api tests
+        run: gh workflow run run-api-tests.yaml
+

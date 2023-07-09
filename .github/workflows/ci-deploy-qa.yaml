@@ -1,12 +1,11 @@
-name: CI Build App
+name: CI Deploy QA
 
 on:
   workflow_dispatch:
-  push:
-    branches: [master]
+  pull_request:
+    branches: master
     paths:
       - 'src/**'
-  pull_request:
 
 env:
   IMAGE_REPO: m219raptis/python-demoapp
@@ -78,11 +77,12 @@ jobs:
           make push
   
   deploy:
-    name: 'Deploy to Digital Ocean'
+    name: 'Deploy Staging'
     needs: build
     runs-on: ubuntu-latest
     env:
       HOST: '64.227.114.131'
+      PORT: 5008
       USER: root
     steps:
       - uses: appleboy/ssh-action@v0.1.10
@@ -93,5 +93,6 @@ jobs:
           script: |
             docker login -u ${{ secrets.D_REG_USER }} -p ${{ secrets.D_REG_PW }}
             docker image pull ${{ env.IMAGE_REPO }}:${{ needs.build.outputs.image_tag }}
-            docker ps -aq | xargs -r docker stop | xargs -r docker rm
-            docker container run -dp 5008:5008 -t ${{ env.IMAGE_REPO }}:${{ needs.build.outputs.image_tag }}
+            docker ps | awk '/:${{ env.PORT }}/ {print $1}' | xargs -r docker stop | xargs -r docker rm
+            docker container run -dp ${{ env.PORT }}:5008 -t ${{ env.IMAGE_REPO }}:${{ needs.build.outputs.image_tag }}
+            
