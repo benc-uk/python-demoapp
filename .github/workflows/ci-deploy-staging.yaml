@@ -7,15 +7,13 @@ on:
     paths:
       - 'src/**'
 
-env:
-  IMAGE_REPO: m219raptis/python-demoapp
-  IMAGE_TAG: latest
-
 jobs:
   deploy:
     name: 'Deploy to Staging'
     runs-on: ubuntu-latest
     env:
+      IMAGE_REPO: m219raptis/python-demoapp
+      IMAGE_TAG: latest
       HOST: '64.227.114.131'
       PORT: 5080
       USER: root
@@ -48,6 +46,9 @@ jobs:
     name: 'Trigger tests'
     runs-on: ubuntu-latest
     steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v3
+        
       - name: trigger api tests
         env:
           GH_TOKEN: ${{ github.token }}
