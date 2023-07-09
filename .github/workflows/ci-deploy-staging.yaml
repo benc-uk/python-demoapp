@@ -14,7 +14,6 @@ jobs:
     env:
       IMAGE_REPO: m219raptis/python-demoapp
       IMAGE_TAG: latest
-      HOST: '64.227.114.131'
       PORT: 5080
       USER: root
     steps:
@@ -33,7 +32,7 @@ jobs:
 
       - uses: appleboy/ssh-action@v0.1.10
         with:
-          host: ${{ env.HOST }}
+          host: ${{ env.STAGING_HOST }}
           username: ${{ env.USER }}
           key: ${{ secrets.D_SSH_KEY }}
           script: |

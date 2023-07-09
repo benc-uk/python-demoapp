@@ -79,13 +79,12 @@ jobs:
     runs-on: ubuntu-latest
     env:
       IMAGE_REPO: m219raptis/python-demoapp
-      HOST: '64.227.114.131'
       PORT: 5008
       USER: root
     steps:
       - uses: appleboy/ssh-action@v0.1.10
         with:
-          host: ${{ env.HOST }}
+          host: ${{ env.QA_HOST }}
           username: ${{ env.USER }}
           key: ${{ secrets.D_SSH_KEY }}
           script: |
