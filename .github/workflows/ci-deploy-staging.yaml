@@ -32,7 +32,7 @@ jobs:
 
       - uses: appleboy/ssh-action@v0.1.10
         with:
-          host: ${{ env.STAGING_HOST }}
+          host: ${{ vars.STAGING_HOST }}
           username: ${{ env.USER }}
           key: ${{ secrets.D_SSH_KEY }}
           script: |

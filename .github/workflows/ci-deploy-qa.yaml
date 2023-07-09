@@ -84,7 +84,7 @@ jobs:
     steps:
       - uses: appleboy/ssh-action@v0.1.10
         with:
-          host: ${{ env.QA_HOST }}
+          host: ${{ vars.QA_HOST }}
           username: ${{ env.USER }}
           key: ${{ secrets.D_SSH_KEY }}
           script: |
