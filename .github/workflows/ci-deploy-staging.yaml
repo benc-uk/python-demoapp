@@ -14,7 +14,6 @@ jobs:
     env:
       IMAGE_REPO: m219raptis/python-demoapp
       IMAGE_TAG: latest
-      USER: root
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v3
@@ -32,7 +31,7 @@ jobs:
       - uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ vars.STAGING_HOST }}
-          username: ${{ env.USER }}
+          username: ${{ secrets.D_SSH_USER }}
           key: ${{ secrets.D_SSH_KEY }}
           script: |
             docker login -u ${{ secrets.D_REG_USER }} -p ${{ secrets.D_REG_PW }}

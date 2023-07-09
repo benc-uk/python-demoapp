@@ -66,10 +66,22 @@ Should you want to build your own container, use `make image` and the above vari
 # GitHub Actions CI/CD
 
 A working set of CI and CD release GitHub Actions workflows are provided `.github/workflows/`, automated builds are run in GitHub hosted runners.
+
+It is assumed that PRs are deployed on a QA enironment and master is deployed on a staging environment.
+
 In the case you fork this repo, please note that there are some secret variables you need to add.
 | Secret Variable | Description                                                             |
 | --------------- | ----------------------------------------------------------------------- |
 | D_REG_USER      | Docker Hub username                                                     |
 | D_REG_PW        | Docker Hub password                                                     |
 | D_SSH_KEY       | SSH private key to deployment server                                    |
+| D_SSH_USER      | Username too login with SSH                                             |
 | GHA_TOKEN       | GitHub token with permission to access your repo (public if it's public)|
+
+Additionally, you need to add the below repository variables.
+| Variable     | Description                                            |
+| ------------ | ------------------------------------------------------ |
+| QA_HOST      | Host for the QA deployment (domain|ip)                 |
+| QA_PORT      | Port where the deployed app can be accessed on QA      |
+| STAGING_HOST | Host for the staging deployment (domain|ip)            |
+| STAGING_PORT | Port where the deployed app can be accessed on staging |
