@@ -85,3 +85,9 @@ Additionally, you need to add the below repository variables.
 | QA_PORT      | Port where the deployed app can be accessed on QA      |
 | STAGING_HOST | Host for the staging deployment (domain|ip)            |
 | STAGING_PORT | Port where the deployed app can be accessed on staging |
+
+The workflows are designed to be extended and support a following working procedure:
+1. Workflow on file ci-deploy-qa will get triggered when a PR gets opened and will execute lower level tests like unit tests as well as any linting.
+If those checks proceed, the branch will get deployed to QA and become available for manual testing and UAT.
+2. Workflow on file ci-deploy-staging will get triggered when the PR gets merged to default branch and will deploy the newer version to staging. It will imediately after that trigger higher level tests like api tests and e2e tests. On our example implementation the API tests are being triggered with workflow dispatch.
+![CICD](https://github.com/marios-r/python-demoapp/assets/18104126/65c21d83-e33f-468d-8cd2-d2e1091c1f96)
