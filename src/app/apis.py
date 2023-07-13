@@ -1,5 +1,6 @@
 from flask import jsonify, current_app as app
 import psutil
+from prometheus_flask_exporter import PrometheusMetrics
 
 olddata = {}
 olddata["disk_write"] = 0
@@ -7,6 +8,7 @@ olddata["disk_read"] = 0
 olddata["net_sent"] = 0
 olddata["net_recv"] = 0
 
+metrics = PrometheusMetrics(app)
 
 #
 # This route returns real time process information as a REST API
