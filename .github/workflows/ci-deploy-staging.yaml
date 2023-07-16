@@ -22,7 +22,6 @@ jobs:
         run: make image IMAGE_TAG=${{ env.IMAGE_TAG }}
 
       - name: 'Push to container registry'
-      # if: github.ref == 'refs/heads/master' && github.event_name == 'push'
         if: github.ref == 'refs/heads/master'
         run: |
           docker login -u ${{ secrets.D_REG_USER }} -p ${{ secrets.D_REG_PW }}

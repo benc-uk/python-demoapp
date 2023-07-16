@@ -31,15 +31,14 @@ jobs:
 
       - name: 'Upload test results'
         uses: actions/upload-artifact@v3
-        # Disabled when running locally with the nektos/act tool
-        if: ${{ always() && !env.ACT }}
+        if: ${{ always() }}
         with:
           name: test-results
           path: ./test-results.xml
 
       - name: 'Publish test results'
         uses: EnricoMi/publish-unit-test-result-action@v2
-        if: ${{ always() && !env.ACT }}
+        if: ${{ always() }}
         with:
           files: test-results.xml
 
@@ -65,10 +64,7 @@ jobs:
       - name: 'Docker build image'
         run: make image
 
-      # Only when pushing to default branch (e.g. master or main), then push image to registry
       - name: 'Push to container registry'
-        # if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-        if: github.ref == 'refs/heads/master'
         run: |
           docker login -u ${{ secrets.D_REG_USER }} -p ${{ secrets.D_REG_PW }}
           make push
