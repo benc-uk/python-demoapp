@@ -1,0 +1,10 @@
+{
+    "image": "m219raptis/python-demoapp:latest",
+    "forwardPorts": [
+        5008
+    ],
+    "extensions": [
+        "ms-python.python"
+    ],
+    "postCreateCommand": "apt-get update && apt-get install make"
+}

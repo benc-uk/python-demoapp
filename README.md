@@ -49,7 +49,7 @@ Make file variables and default values, pass these in when calling `make`, e.g. 
 | IMAGE_REPO        | m219raptis/python-demoapp |
 | IMAGE_TAG         | latest                    |
 
-The app runs under Flask and listens on port 5000 by default, this can be changed with the `PORT` environmental variable.
+Getting weird errors? You have the option to use the [dev container on vsCode](https://code.visualstudio.com/docs/devcontainers/create-dev-container). 
 
 # Containers
 
