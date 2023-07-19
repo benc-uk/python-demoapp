@@ -49,7 +49,7 @@ Make file variables and default values, pass these in when calling `make`, e.g. 
 | IMAGE_REPO        | m219raptis/python-demoapp |
 | IMAGE_TAG         | latest                    |
 
-Getting weird errors? You have the option to use the [dev container on vsCode](https://code.visualstudio.com/docs/devcontainers/create-dev-container). 
+:exploding_head: Want to avoid some hassle? You also have the option to use the pre-configured dev container (.devcontainer/devcontainer.json) to run and test the application.  
 
 # Containers
 

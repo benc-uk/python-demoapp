@@ -3,8 +3,10 @@
     "forwardPorts": [
         5008
     ],
-    "extensions": [
-        "ms-python.python"
-    ],
-    "postCreateCommand": "apt-get update && apt-get install make"
+    "features": {
+        "node": {
+            "version": "lts",
+            "nodeGypDependencies": true
+        }
+    }
 }
