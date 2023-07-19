@@ -25,10 +25,6 @@
         <td>{{ info.plat.python_version() }}</td>
       </tr>
       <tr>
-        <td><b>Processor &amp; Cores</b></td>
-        <td>{{ info.cpu.count }} x {{ info.cpu.brand }}</td>
-      </tr>
-      <tr>
         <td><b>System Memory</b></td>
         <td>{{ (info.mem.total / (1024*1024*1024)) | round(0,'ceil') |int }}GB ({{info.mem.percent}}% used)</td>
       </tr>

@@ -1,6 +1,5 @@
 from flask import render_template, current_app as app
 
-import cpuinfo
 import psutil
 import platform
 import datetime
@@ -15,7 +14,6 @@ def index():
 def info():
     osinfo = {}
     osinfo["plat"] = platform
-    osinfo["cpu"] = cpuinfo.get_cpu_info()
     osinfo["mem"] = psutil.virtual_memory()
     osinfo["net"] = psutil.net_if_addrs()
     osinfo["boottime"] = datetime.datetime.fromtimestamp(psutil.boot_time()).strftime(
