@@ -1,0 +1,13 @@
+#Name of the job is run_tests
+run_tests:
+#  the image in docker hub
+  image: python:3.9-slim-buster
+#  commands that should run before the script section, e.g., set the environment var, fetch data,
+#  install sth that the main script needs.
+  before_script:
+    - apt-get update && apt-get install make
+#  script is used to list all the commands to be executed
+  script:
+    - make test
+
+# commands that should run after each job, including the failed job: use after_script
